@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO APP</title>
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/vue-toasted"></script>
+  
+
+</head>
+<body>
+    <div id="app">
+        <div id="todo-list" class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <h1 style="margin-top: 2em; font-style:oblique; font-weight: bolder; color: blueviolet;" class="text-center">TODO List</h1>
+                    <form id ="form">
+                        <label style="margin-top: 2em; font-style: italic; color: blue;" for="taskname">Add Task</label>
+                        <input style="margin: .5em;" type="text" v-model="newTodoText" id="taskname" class="form-control" placeholder="Add new Task">
+                        <input  style="margin: .5em;" type="time" v-model="newTododead" id="deadline" class="form-control " placeholder="Dead line">
+                        <button type= "button" class="btn btn-success btn-block mt-3" v-on:click = 'addNewTodo()'>submit</button>
+                        <button type= "button" class="btn btn-warning btn-block mt-3" v-on:click = 'resetTodo($event)'>reset</button>
+                                      
+                    </form>
+                    <p style="margin: 1em 0px; font-style: italic; color: blue;">List of tasks Added</p>
+                    <table class="table mt-3">
+                        <tr is="todo-item" v-for="(todo,index) in todos" v-bind:key="todo.id" v-bind:title="todo.task" v-on:remove="todos.splice(index,1)"></tr>
+                    </table>                        
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    Vue.use(Toasted)
+    
+    var MyComponent = Vue.extend({
+        template : `
+        <my-component
+        v-for="(item,index) in items"
+        v-bind:item="item"
+        v-bind:index="index"
+        v-bind:key="item.id"
+        ></my-component`
+
+    })
+
+    Vue.component('my-component',MyComponent)
+
+    Vue.component('todo-item',{
+        template: `
+        <tr>
+         <td class="text-left">
+          {{title}}
+         </td>
+         <td class="text-right">
+          <button    v-on:click="$emit('remove')" class="btn btn-danger">Remove</button>
+         </td> 
+        </tr>
+        `,
+        props: ['title']
+    })
+
+    new Vue({
+        el: '#todo-list',
+        data: {
+            newTodoText: '',
+            newTododead: '',
+            todos: [],
+            nextTodoId: 1
+        },
+        methods: {
+            addNewTodo: function() {
+                if(this.newTodoText ===''){
+                let myToast = this.$toasted.show("Helloo");
+                myToast.text("SORRY! It is mandatory to specify Title").goAway(1500);
+                }
+                else if(this.newTododead ===''){
+                let myToast = this.$toasted.show("Helloo");
+                myToast.text("SORRY! It is mandatory to specify Deadline").goAway(1500);
+                }
+                else{
+                this.todos.push({
+                    id: this.newTodoId++,
+                    task: this.newTodoText +' - ('+this.newTododead+')'
+                })
+                this.newTodoText = '';
+                this.newTododead = '';
+                }
+            },
+            resetTodo:function(event){
+                var formComponent = document.getElementById('form');
+                formComponent.reset();
+            }
+                    }
+    })
+</script>
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>
